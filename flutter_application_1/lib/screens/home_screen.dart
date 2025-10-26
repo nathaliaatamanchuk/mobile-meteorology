@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
             Icon(
               Icons.cloud, // Use um pacote SVG para igual ao print
               size: 120,
-              color: Colors.teal,
+              color: Color(0xFF3C6E91),
             ),
             const SizedBox(height: 32),
             const Text(
@@ -55,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
+                  backgroundColor: Color(0xFF3C6E91),
                   shape: StadiumBorder(),
                   elevation: 0,
                 ),
@@ -74,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                   width: 10,
                   height: 10,
                   decoration: BoxDecoration(
-                    color: Colors.teal,
+                    color: Color(0xFF3C6E91),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
                   width: 10,
                   height: 10,
                   decoration: BoxDecoration(
-                    color: Colors.teal.withOpacity(0.2),
+                    color: Color(0xFF3C6E91).withOpacity(0.2),
                     shape: BoxShape.circle,
                   ),
                 ),

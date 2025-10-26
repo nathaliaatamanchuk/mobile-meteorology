@@ -1,119 +1,119 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import '../services/auth_service.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _form = GlobalKey<FormState>();
+  final _username = TextEditingController();
+  final _email = TextEditingController();
+  final _first = TextEditingController();
+  final _last = TextEditingController();
+  final _pass = TextEditingController();
+  final _pass2 = TextEditingController();
+  bool _loading = false;
+  String? _msg;
+  final _auth = AuthService();
+
+  @override
+  void dispose() {
+    _username.dispose();
+    _email.dispose();
+    _first.dispose();
+    _last.dispose();
+    _pass.dispose();
+    _pass2.dispose();
+    super.dispose();
+  }
+
+  void _submit() async {
+    if (!_form.currentState!.validate()) return;
+    setState(() { _loading = true; _msg = null; });
+    try {
+      await _auth.register(
+        username: _username.text.trim(),
+        email: _email.text.trim(),
+        firstName: _first.text.trim(),
+        lastName: _last.text.trim(),
+        password: _pass.text,
+        passwordConfirm: _pass2.text,
+      );
+      if (!mounted) return;
+      setState(() { _msg = 'Conta criada. Faça login.'; });
+    } catch (e) {
+      setState(() { _msg = '$e'; });
+    } finally {
+      setState(() { _loading = false; });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    const primary = Color(0xFF3C6E91);
+    const bg = Color(0xFFF2F8FB);
+    const input = Color(0xFFD3E7EF);
+    const text = Color(0xFF4E4E4E);
+    const muted = Color(0xFF8A8A8A);
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: bg,
+      appBar: AppBar(title: const Text('Registro')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _form,
+          child: ListView(
             children: [
-              const SizedBox(height: 32),
-              Row(
-                children: [
-                  Icon(
-                    Icons.cloud,
-                    size: 36,
-                    color: Colors.teal,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Registro',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
+              const Text('Crie sua conta', style: TextStyle(color: text, fontSize: 18, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _username,
+                decoration: InputDecoration(filled: true, fillColor: input, labelText: 'Username', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide.none)),
+                validator: (v) => v == null || v.isEmpty ? 'Obrigatório' : null,
               ),
-              const SizedBox(height: 40),
-              const Text(
-                'Crie sua conta preenchendo os dados abaixo',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _email,
+                decoration: InputDecoration(filled: true, fillColor: input, labelText: 'E-mail', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide.none)),
               ),
-              const SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'E-mail',
-                  filled: true,
-                  fillColor: Colors.teal[50],
-                  contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                  color: Colors.black87,
-                ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _first,
+                decoration: InputDecoration(filled: true, fillColor: input, labelText: 'Nome', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide.none)),
               ),
-              const SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Nome',
-                  filled: true,
-                  fillColor: Colors.teal[50],
-                  contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _last,
+                decoration: InputDecoration(filled: true, fillColor: input, labelText: 'Sobrenome', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide.none)),
               ),
-              const SizedBox(height: 20),
-              TextField(
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _pass,
                 obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  filled: true,
-                  fillColor: Colors.teal[50],
-                  contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+                decoration: InputDecoration(filled: true, fillColor: input, labelText: 'Senha', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide.none)),
+                validator: (v) => v == null || v.isEmpty ? 'Obrigatório' : null,
               ),
-              const Spacer(),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _pass2,
+                obscureText: true,
+                decoration: InputDecoration(filled: true, fillColor: input, labelText: 'Confirmar senha', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide.none)),
+                validator: (v) => v != _pass.text ? 'Senhas diferentes' : null,
+              ),
+              const SizedBox(height: 16),
+              if (_msg != null) Text(_msg!, style: const TextStyle(color: Colors.blue)),
+              const SizedBox(height: 8),
               SizedBox(
-                width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Simula registro (placeholder)
-                    // TODO: Substituir por lógica de backend
-                    print('Conta criada!'); // Placeholder
-                    // Navega de volta para LoginScreen como exemplo
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: const Text(
-                    'Criar Conta',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+                  onPressed: _loading ? null : _submit,
+                  child: _loading ? const CircularProgressIndicator() : const Text('Criar Conta'),
                 ),
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
